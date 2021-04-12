@@ -1,2 +1,25 @@
-*.class
+# sbt
+bin/
+project/
+target/
+build/
+
+# intellij idea
 *.log
+*.iml
+*.ipr
+*.iws
+.idea
+.bsp
+
+#general
+*.class
+
+# mac
+.DS_Store
+
+# data
+*.csv
+*.dat
+*.json
+*.parquet
