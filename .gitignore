@@ -19,7 +19,4 @@ build/
 .DS_Store
 
 # data
-*.csv
-*.dat
-*.json
-*.parquet
+
