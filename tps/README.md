@@ -80,7 +80,8 @@ Thread.sleep(1000)
 }
 ```
 
-#PARTIE 2
+
+# PARTIE 2
 
 ##### Cette partie est orienté Recherche et Développement
 - Cette partie doit être ecrite en mode batch dans un premier temps, la solution streaming peut etre envisagée après validation de la solution
