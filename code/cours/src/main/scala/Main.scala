@@ -59,22 +59,20 @@ object Main extends App {
       col("CustomerId"), window(col("InvoiceDate"), "10 minutes"))
     .sum("total_cost")
 
- /* purchaseByCustomerPerHour.writeStream
+  purchaseByCustomerPerHour.writeStream
     .format("memory") // memory = store in-memory table
     .queryName("customer_purchases") // the name of the in-memory table
     .outputMode("complete") // complete = all the counts should be in the table
-    .start*/
+    .start
 
-
-
-  /*for (i <- 1 to 50) {
+  for (i <- 1 to 50) {
   spark.sql("""
       SELECT *
       FROM customer_purchases
       ORDER BY `sum(total_cost)` DESC """)
     .show( false)
     Thread.sleep(500)
-  }*/
+  }
 
 
 
