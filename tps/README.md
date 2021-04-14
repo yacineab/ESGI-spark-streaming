@@ -105,8 +105,8 @@ Les données sont au format Json et ressemble à ceci :
     "registered": "2015-04-24T06:51:05 -02:00",
     "input1": "Veniam Lorem cillum dolor mollit Lorem non duis nostrud elit veniam anim.",
     "output1": "Adipisicing et nulla cillum duis labore magna proident ut enim eu magna aliqua irure.",
-    "input2": ??? ,
-    "output2": ??? 
+    "input2": ... ,
+    "output2": ... 
   }
 ```
 
