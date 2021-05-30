@@ -14,7 +14,7 @@ The data consists of smartphones and smartwatch sensor reading from a variety of
 1. faire un select ``` distinct ``` sur la colone ``` gt ``` et ensuite un ```show() ```
 ##### The ``` gt ``` column: montre l'activité du user à un moment donné (i.e: sit, stand,walk, bike, stairsup, stairsdown) 
 
-### Straming du DataFrame
+### Streaming du DataFrame
 1. Pour pouvoir inférer le schema définie plus haut ```dataSchema``` à notre stream:
 Setté la conf ``` spark.sql.streaming.schemaInference ```à ``` true ```
 1. Pour créer un strcutured stream ```streaming``` qui va utiliser comme input source les fichiers json du répertoire ```activity-data```
@@ -80,7 +80,8 @@ Thread.sleep(1000)
 }
 ```
 
-#PARTIE 2
+
+# PARTIE 2
 
 ##### Cette partie est orienté Recherche et Développement
 - Cette partie doit être ecrite en mode batch dans un premier temps, la solution streaming peut etre envisagée après validation de la solution
@@ -105,7 +106,7 @@ Les données sont au format Json et ressemble à ceci :
     "input1": "Veniam Lorem cillum dolor mollit Lorem non duis nostrud elit veniam anim.",
     "output1": "Adipisicing et nulla cillum duis labore magna proident ut enim eu magna aliqua irure.",
     "input2": ... ,
-    "output2": ... ,
+    "output2": ... 
   }
 ```
 
