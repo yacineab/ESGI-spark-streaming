@@ -5,13 +5,14 @@ object Main extends App {
 
   val spark = SparkSession
     .builder()
-    .config("spark.sql.shuffle.partitions","5")
     .appName("CoursSparkStreaming")
     .master("local[*]")
     .getOrCreate()
 
-  spark.sparkContext.setLogLevel("ERROR")
 
+  spark.sparkContext.setLogLevel("ERROR")
+  spark.conf.set("spark.sql.streaming.schemaInference","true")
+  spark.conf.set("spark.sql.shuffle.partitions","5")
   // Create DataFrame
   val staticDataFrame = spark.read.format("csv")
     .option("header", "true")
@@ -19,7 +20,7 @@ object Main extends App {
     .load("../../data/retail-data/by-day/")
 
   //staticDataFrame.printSchema()
- // staticDataFrame.show(10, false)
+  staticDataFrame.show(10, false)
 
   // Create tempTable
   staticDataFrame.createOrReplaceTempView("retail_data")
@@ -64,14 +65,14 @@ object Main extends App {
     .queryName("customer_purchases") // the name of the in-memory table
     .outputMode("complete") // complete = all the counts should be in the table
     .start
-
-  for (i <- 1 to 50) {
+  println(spark.streams.active)
+  for (i <- 1 to 100) {
   spark.sql("""
       SELECT *
       FROM customer_purchases
       ORDER BY `sum(total_cost)` DESC """)
     .show( false)
-    Thread.sleep(500)
+    Thread.sleep(3000)
   }
 
 
