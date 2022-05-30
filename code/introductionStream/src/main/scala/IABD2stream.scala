@@ -94,6 +94,7 @@ val sparkSession = SparkSession
 
   for (i <- 1 to 50 ) {
     sparkSession.sql(
+
       """
         |select * from purchase_stream
         |order by `sum(total_cost)` DESC
