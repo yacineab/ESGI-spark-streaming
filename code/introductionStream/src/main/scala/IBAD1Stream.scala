@@ -1,6 +1,6 @@
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
-object IBAD3Stream extends App {
+object IBAD1Stream extends App {
 
   // definition Spark Session
   val sparkSession = SparkSession.
@@ -146,4 +146,24 @@ object IBAD3Stream extends App {
   val dfNoNull = retailDF.drop()
   dfNoNull.show()
 
+  val impressions = sparkSession
+    .readStream.format("rate").option("rowsPerSecond", "5").option("numPartitions", "1").load()
+    .select(col("value").as("adId"), col("timestamp").as("impressionTime"))
+  //impressions.show()
+
+  impressions.writeStream
+    .format("memory") // memory = store in-memory table
+    .queryName("impression")  // the name of the in-memory table
+    .outputMode("append") // complete = all the counts should be in the table
+    .start
+
+  for (i <- 1 to 50) {
+    sparkSession.sql(
+      """
+        |Select * from impression
+        |""".stripMargin
+    ).show(false)
+
+    Thread.sleep(1000)
+  }
 }

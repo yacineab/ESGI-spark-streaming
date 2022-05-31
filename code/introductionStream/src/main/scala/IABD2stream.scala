@@ -17,10 +17,10 @@ val sparkSession = SparkSession
     .format("csv")
     .option("inferSchema","true")
     .option("header","true")
-    .load("/Users/yacine/IdeaProjects/ESGI-spark-streaming/data/by-day/*.csv")
+    .load("/Users/yacine/IdeaProjects/ESGI-spark-streaming-bkp/data/retail-data/by-day/*.csv")
 
 
-  retaildf.printSchema()
+  // retaildf.printSchema()
   // retaildf.show(false)
 
   // create Temp view to use Spark SQL
@@ -104,7 +104,44 @@ val sparkSession = SparkSession
     Thread.sleep(1000)
   }
 
-  System.in.read
-  sparkSession.stop()
+// Aggregation
+  retaildf.select(count("StockCode")).show(false)
+  retaildf.select(countDistinct("StockCode")).show(false)
+  retaildf.select(approx_count_distinct("StockCode", 0.02)).show(false)
+  retaildf.select(first("StockCode"), last("StockCode")).show(false)
+
+  retaildf.select(
+    count("Quantity").alias("total_transaction"),
+    sum("Quantity").alias("total_purchases"),
+    avg("Quantity").alias("avg_purchases"),
+    expr("mean (Quantity)").alias("mean_purchases")
+  )
+    .selectExpr(
+      "total_purchases/total_transaction",
+      "avg_purchases",
+      "mean_purchases"
+    )
+    .show(false)
+
+  retaildf.groupBy("InvoiceNo", "CustomerId").count().show(false)
+
+  retaildf.groupBy("InvoiceNo")
+    .agg(
+      count("Quantity").alias("quant"),
+      expr("count(Quantity)")
+    ).show(false)
+
+  // Group By avec MAP
+  retaildf.groupBy("InvoiceNo")
+    .agg("Quantity" -> "avg")
+    .show(false)
+
+  // delete null value
+
+  val dfNoNull = retaildf.drop()
+
+  dfNoNull.show(false)
+  /*System.in.read
+  sparkSession.stop()*/
 
 }
