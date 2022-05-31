@@ -21,7 +21,7 @@ object IBAD3cours extends App {
     .csv("/Users/yacine/IdeaProjects/ESGI-spark-streaming-bkp/data/retail-data/by-day/*.csv")
 
   retailDF.printSchema()
-  // retailDF.show(false)
+  retailDF.show(false)
 
   // Créer une vue sql sur le dataframe
   retailDF.createOrReplaceTempView("retail_table")
