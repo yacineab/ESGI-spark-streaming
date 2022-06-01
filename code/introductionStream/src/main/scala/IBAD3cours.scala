@@ -20,8 +20,8 @@ object IBAD3cours extends App {
     .option("inferSchema", true)
     .csv("/Users/yacine/IdeaProjects/ESGI-spark-streaming-bkp/data/retail-data/by-day/*.csv")
 
-  retailDF.printSchema()
-  retailDF.show(false)
+ // retailDF.printSchema()
+ // retailDF.show(false)
 
   // Créer une vue sql sur le dataframe
   retailDF.createOrReplaceTempView("retail_table")
@@ -37,7 +37,7 @@ object IBAD3cours extends App {
 
   println("================= Window ================")
 
-  val maxPurchase = retailDF
+/*  val maxPurchase = retailDF
   .selectExpr(
     "CustomerID",
     "(UnitPrice * Quantity) as total_cost",
@@ -46,7 +46,7 @@ object IBAD3cours extends App {
     .groupBy(
       col("CustomerID"),
       window(col("InvoiceDate"), "1 day"))
-    .sum("total_cost")
+    .sum("total_cost")*/
 
 
   //maxPurchase.show(false)
@@ -64,7 +64,7 @@ object IBAD3cours extends App {
   println("spark is streaming : " + retailStream.isStreaming )
 
 
-  val streamPurchase = retailStream
+  /*val streamPurchase = retailStream
     .selectExpr(
       "CustomerID",
       "(UnitPrice * Quantity) as total_cost",
@@ -73,28 +73,59 @@ object IBAD3cours extends App {
     .groupBy(
       col("CustomerID"),
       window(col("InvoiceDate"), "10 minutes"))
-    .sum("total_cost")
+    .sum("total_cost")*/
 
 
   // Streaming Action
-  streamPurchase
+/*  streamPurchase
     .writeStream
     .format("memory")
     .queryName("stream_table")
     .outputMode("complete")
-    .start()
+    .start()*/
 
-for (i <- 1 to 50 ) {
-  val memoryStreamdf = sparkSession.sql(
-    """
-      | select * from stream_table
-      |""".stripMargin
+  /**
+   * Aggregation functions
+   */
+
+  retailDF.select(count("StockCode")).show(false)
+  retailDF.select(countDistinct("StockCode")).show(false)
+  retailDF.select(approx_count_distinct("StockCode",  0.01)).show(false)
+  retailDF.select(first("StockCode"), last("StockCode")).show(false)
+  // calcul de moyenne
+
+  retailDF.select(
+    count("Quantity").as("total_transactions"),
+    sum("Quantity").as("total_pruchases"),
+    avg("Quantity").as("avg_quantity"),
+    expr("mean (Quantity)").as("mean_quantity")
   )
+    .selectExpr(
+      "total_pruchases/total_transactions",
+      "avg_quantity",
+      "mean_quantity"
+    ).show(false)
 
-  memoryStreamdf.show(false)
-  Thread.sleep(1000)
-}
+  retailDF.groupBy("InvoiceNo", "CustomerId").count().show()
 
-  System.in.read
-  sparkSession.stop()
+  retailDF.groupBy("InvoiceNo")
+    .agg(
+      count("Quantity").alias("quan"),
+      expr("count (Quantity)")
+    ).show(false)
+
+  // grouping with Maps
+
+  retailDF
+    .groupBy("InvoiceNo")
+    .agg("Quantity" -> "avg")
+    .show()
+
+
+  // to delete null value
+  val dfWithoutNull = retailDF.drop() // supprime toutes les lignes avec une valeur nulle
+
+
+
+
 }
