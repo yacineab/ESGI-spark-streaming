@@ -120,4 +120,8 @@ object Iabd3StreamJoin extends App {
         |""".stripMargin).show(100,false)
     Thread.sleep(1000)
   }
+
+
+  System.in.read
+  sparkSession.stop()
 }
